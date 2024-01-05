@@ -49,7 +49,6 @@ userSchema.statics.signup = async function(name, email, password) {
     if (existingName) {
         throw new Error('Name already in use');
     }
-    
 
     // hash password
     const passwordHash = await bcrpt.hash(password, 10);

@@ -3,9 +3,16 @@ const Spending = require('../models/spendingModel');
 const Income = require('../models/incomeModel');
 const Budget = require('../models/budgetModel');
 
+const jwt = require('jsonwebtoken');
+
 const validator = require('validator');
 
 const mongoose = require('mongoose');
+
+// create token
+const createToken = (_id) => {
+    return jwt.sign({ _id }, process.env.SECRET_KEY, { expiresIn: '3d' });
+}
 
 // login user
 const loginUser = async (req, res) => {
@@ -31,9 +38,14 @@ const signupUser = async (req, res) => {
 
     try {
         const user = await User.signup(name, email, password);
+
+        // create token
+        const token = createToken(user._id);
+
         res.status(201).json({
             message: "User Created Successfully",
-            data: user
+            data: user,
+            token: token
         })
     } catch (error) {
         res.status(400).json({
