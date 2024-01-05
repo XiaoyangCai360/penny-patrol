@@ -20,14 +20,18 @@ const loginUser = async (req, res) => {
 
     try {
         const user = await User.login(nameOrEmail, password);
+
+        // create token
+        const token = createToken(user._id);
+
         res.status(200).json({
             message: "User Logged In Successfully",
-            data: user
+            data: user,
+            token: token
         })
     } catch (error) {
         res.status(400).json({
-            message: "Bad Request",
-            data: error.message
+            message: error.message
         })
     }
 }
